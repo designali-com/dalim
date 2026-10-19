@@ -1,0 +1,70 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
+    },
+    "start": {
+      "dependsOn": ["^build"]
+    },
+    "lint": {
+      "cache": false,
+      "outputs": []
+    },
+    "dev": {
+      "cache": false
+    },
+    "registry:build": {
+      "cache": false,
+      "outputs": []
+    }
+  },
+  "globalEnv": [
+    "NEXT_PUBLIC_APP_URL",
+    "AUTH_SECRET",
+    "NEXTAUTH_URL",
+    "DALIM_URL",
+    "UI_URL",
+    "AGENCY_URL",
+    "WORKS_URL",
+    "LEARN_URL",
+    "RESEND_EMAIL_FROM", 
+    "DATABASE_URL",
+    "GITHUB_CLIENT_ID",
+    "GITHUB_CLIENT_SECRET", 
+    "GOOGLE_CLIENT_ID",
+    "GOOGLE_CLIENT_SECRET", 
+    "EMAIL_FROM",
+    "RESEND_API_KEY",
+    "POSTGRES_URL",
+    "POSTGRES_PRISMA_URL",
+    "DATABASE_URL_UNPOOLED",
+    "POSTGRES_URL_NON_POOLING",
+    "PGHOST",
+    "POSTGRES_USER",
+    "STACK_SECRET_SERVER_KEY",
+    "POSTGRES_PASSWORD",
+    "POSTGRES_DATABASE",
+    "PGPASSWORD",
+    "PGDATABASE",
+    "PGHOST_UNPOOLED",
+    "PGUSER",
+    "POSTGRES_URL_NO_SSL",
+    "POSTGRES_HOST",
+    "CLOUDINARY_API_KEY",
+    "CLOUDINARY_API_SECRET",
+    "CLOUDINARY_CLOUD_NAME",
+    "NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME",
+    "FONTS_URL",
+    "AUTH_URL",
+    "GRAPHIC_URL",
+    "ICONS_URL",
+    "SPOTIFY_CLIENT_ID",
+    "SPOTIFY_CLIENT_SECRET",
+    "SPOTIFY_REFRESH_TOKEN",
+    "VISUALS_URL",
+    "GOOGLE_GENERATIVE_AI_API_KEY",
+    "TOOLS_URL"
+  ]
+}

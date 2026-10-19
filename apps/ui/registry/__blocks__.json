@@ -1,0 +1,97 @@
+[
+  {
+    "name": "dashboard-01",
+    "description": "A dashboard with sidebar, charts and data table.",
+    "categories": ["dashboard"]
+  },
+  {
+    "name": "login-01",
+    "description": "A simple login form.",
+    "categories": ["authentication", "login"]
+  },
+  {
+    "name": "call-to-action-01",
+    "description": "A simple call to action form.",
+    "categories": ["connect", "call-to-action"]
+  },
+  {
+    "name": "call-to-action-02",
+    "description": "A simple call to action form.",
+    "categories": ["connect", "call-to-action"]
+  },
+  {
+    "name": "hero-01",
+    "description": "A simple hero section",
+    "categories": ["banner", "hero"]
+  },
+  {
+    "name": "hero-02",
+    "description": "A simple hero photo gallery section",
+    "categories": ["banner", "hero"]
+  },
+  {
+    "name": "hero-03",
+    "description": "A simple hero section",
+    "categories": ["banner", "hero"]
+  },
+  {
+    "name": "hero-04",
+    "description": "A simple hero section",
+    "categories": ["banner", "hero"]
+  },
+  {
+    "name": "hero-05",
+    "description": "A simple hero section",
+    "categories": ["banner", "hero"]
+  },
+  {
+    "name": "hero-06",
+    "description": "A simple hero section",
+    "categories": ["banner", "hero"]
+  },
+  {
+    "name": "logos-01",
+    "description": "A simple client logo section",
+    "categories": ["client", "logos"]
+  },
+  {
+    "name": "logos-02",
+    "description": "A simple client logo section",
+    "categories": ["client", "logos"]
+  },
+  {
+    "name": "logos-03",
+    "description": "A simple client logo section",
+    "categories": ["client", "logos"]
+  },
+  {
+    "name": "logos-04",
+    "description": "A simple client logo section",
+    "categories": ["client", "logos"]
+  },
+  {
+    "name": "stats-01",
+    "description": "A simple stats section",
+    "categories": ["data", "stats"]
+  },
+  {
+    "name": "stats-02",
+    "description": "A simple stats section",
+    "categories": ["data", "stats"]
+  },
+  {
+    "name": "stats-03",
+    "description": "A simple stats section",
+    "categories": ["data", "stats"]
+  },
+  {
+    "name": "pricing-01",
+    "description": "A simple pricing section",
+    "categories": ["subscription", "pricing"]
+  },
+  {
+    "name": "pricing-02",
+    "description": "A simple pricing section",
+    "categories": ["subscription", "pricing"]
+  }
+]

@@ -1,0 +1,432 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  USER
+}
+
+enum FontType {
+  TTF
+  OTF
+  WOFF
+  WOFF2
+  OTHER
+}
+
+enum FontCategory {
+  SANS_SERIF
+  SERIF
+  MONOSPACE
+  DISPLAY
+  HANDWRITING
+  SCRIPT
+  DECORATIVE
+  OTHER
+}
+
+enum GraphicCategory {
+  ILLUSTRATION
+  ICON
+  TEMPLATE
+  MOCKUP
+  MODEL
+  BACKGROUND
+  OTHER
+}
+
+enum VisualsCategory {
+  PORTFOLIO
+  BRANDING
+  TOOLS
+  AI
+}
+
+enum DownloadType {
+  GRAPHIC
+  FONT
+}
+
+enum MessageStatus {
+  SENT
+  DELIVERED
+  READ
+}
+
+enum ConversationStatus {
+  ACTIVE
+  CLOSED
+  ARCHIVED
+}
+
+model Account {
+  id                String   @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?  @db.Text
+  access_token      String?  @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?  @db.Text
+  session_state     String?
+  createdAt         DateTime @default(now()) @map(name: "created_at")
+  updatedAt         DateTime @default(now()) @map(name: "updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+  @@map(name: "accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map(name: "sessions")
+}
+
+model User {
+  id                     String    @id @default(cuid())
+  name                   String?
+  username               String?   @unique
+  password               String?
+  email                  String?   @unique
+  emailVerified          DateTime?
+  bio                    String?
+  summary                String?
+  image                  String?
+  coverImage             String?
+  website                String?
+  twitter                String?
+  instagram              String?
+  linkedin               String?
+  createdAt              DateTime  @default(now()) @map(name: "created_at")
+  updatedAt              DateTime  @default(now()) @map(name: "updated_at")
+  role                   UserRole  @default(USER)
+  isTwoFactorAuthEnabled Boolean   @default(false)
+  twoFactorAuthVerified  DateTime?
+
+  accounts  Account[]
+  sessions  Session[]
+  fonts     Font[]
+  graphics  Graphic[]
+  visuals   Visuals[]
+  downloads Download[]
+
+  // Chat related fields
+  sentMessages     Message[]                 @relation("SentMessages")
+  receivedMessages Message[]                 @relation("ReceivedMessages")
+  conversations    ConversationParticipant[]
+  notifications    Ping[]
+
+  stripeCustomerId       String?          @unique @map(name: "stripe_customer_id")
+  stripeSubscriptionId   String?          @unique @map(name: "stripe_subscription_id")
+  stripePriceId          String?          @map(name: "stripe_price_id")
+  stripeCurrentPeriodEnd DateTime?        @map(name: "stripe_current_period_end")
+  
+  DesignChat             DesignChat[]     @relation("UserDesignChats")
+  DesignChatVote         DesignChatVote[] @relation("UserDesignChatVotes")
+
+  @@map(name: "users")
+}
+
+model VerificationToken {
+  id      String   @id @default(cuid())
+  email   String   @unique
+  token   String   @unique
+  expires DateTime
+
+  @@unique([email, token])
+}
+
+model TwoFactorToken {
+  id      String   @id @default(cuid())
+  email   String   @unique
+  token   String   @unique
+  expires DateTime
+
+  @@unique([email, token])
+}
+
+model ResetPasswordToken {
+  id      String   @id @default(cuid())
+  email   String   @unique
+  token   String   @unique
+  expires DateTime
+
+  @@unique([email, token])
+}
+
+model Font {
+  id            String        @id @default(cuid())
+  name          String
+  description   String?       @db.Text
+  type          FontType
+  category      FontCategory?
+  fontFiles     String?
+  previewUrl    String
+  downloadUrl   String
+  zipFileUrl    String?
+  licenceUrl    String?
+  viewCount     Int           @default(0)
+  downloadCount Int           @default(0)
+  featured      Boolean       @default(false)
+  tags          String[]      @default([])
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  userId        String
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  publicId      String?
+
+  @@index([userId])
+  @@map(name: "fonts")
+}
+
+model Graphic {
+  id             String          @id @default(cuid())
+  title          String
+  description    String?         @db.Text
+  category       GraphicCategory
+  images         String[]        @default([])
+  imagePublicIds String[]        @default([])
+  link           String?
+  tags           String[]        @default([])
+  viewCount      Int             @default(0)
+  downloadCount  Int             @default(0)
+  featured       Boolean         @default(false)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  userId         String
+  user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([category])
+  @@index([featured])
+  @@map(name: "graphics")
+}
+
+model Visuals {
+  id          String          @id @default(cuid())
+  title       String
+  description String?         @db.Text
+  category    VisualsCategory
+  image       String
+  link        String
+  tags        String[]        @default([])
+  viewCount   Int             @default(0)
+  visitCount  Int             @default(0)
+  featured    Boolean         @default(false)
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  userId      String
+  user        User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([category])
+  @@index([featured])
+  @@map(name: "visuals")
+}
+
+model Download {
+  id              String       @id @default(cuid())
+  userId          String
+  itemId          String
+  itemType        DownloadType
+  itemTitle       String
+  itemImage       String?
+  downloadUrl     String?
+  firstDownloadAt DateTime     @default(now())
+  lastDownloadAt  DateTime     @default(now())
+  downloadCount   Int          @default(1)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, itemId, itemType])
+  @@index([userId])
+  @@index([itemType])
+  @@index([lastDownloadAt])
+  @@map(name: "downloads")
+}
+
+// Chat Models
+model Conversation {
+  id            String             @id @default(cuid())
+  title         String?
+  status        ConversationStatus @default(ACTIVE)
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+  lastMessageAt DateTime?
+
+  participants ConversationParticipant[]
+  messages     Message[]
+
+  @@map(name: "conversations")
+}
+
+model ConversationParticipant {
+  id             String    @id @default(cuid())
+  conversationId String
+  userId         String
+  joinedAt       DateTime  @default(now())
+  lastReadAt     DateTime?
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([conversationId, userId])
+  @@index([conversationId])
+  @@index([userId])
+  @@map(name: "conversation_participants")
+}
+
+model Message {
+  id        String        @id @default(cuid())
+  content   String?       @db.Text
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  status    MessageStatus @default(SENT)
+  readAt    DateTime?
+
+  senderId String
+  sender   User   @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+
+  recipientId String?
+  recipient   User?   @relation("ReceivedMessages", fields: [recipientId], references: [id], onDelete: SetNull)
+
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  attachments Attachment[]
+
+  @@index([senderId])
+  @@index([recipientId])
+  @@index([conversationId])
+  @@index([createdAt])
+  @@map(name: "messages")
+}
+
+model Attachment {
+  id        String   @id @default(cuid())
+  fileName  String
+  fileType  String
+  fileSize  Int
+  fileUrl   String
+  publicId  String?
+  createdAt DateTime @default(now())
+
+  messageId String
+  message   Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  @@index([messageId])
+  @@map(name: "attachments")
+}
+
+model Ping {
+  id        String   @id @default(cuid())
+  type      String
+  title     String
+  content   String?  @db.Text
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  referenceId   String?
+  referenceType String?
+  data          Json?
+
+  @@index([userId])
+  @@index([isRead])
+  @@index([createdAt])
+  @@map(name: "notifications")
+}
+
+// Add these models to your existing schema.prisma file
+
+model DesignChat {
+  id          String   @id @default(cuid())
+  title       String
+  description String?  @db.Text
+  isPublic    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // User relationship
+  userId String
+  user   User   @relation("UserDesignChats", fields: [userId], references: [id], onDelete: Cascade)
+
+  // Messages in this chat
+  messages DesignMessage[]
+
+  // Voting
+  votes     DesignChatVote[]
+  upvotes   Int              @default(0)
+  downvotes Int              @default(0)
+
+  // Stats
+  viewCount Int @default(0)
+
+  @@index([userId])
+  @@index([isPublic])
+  @@index([createdAt])
+  @@map(name: "design_chats")
+}
+
+model DesignMessage {
+  id        String   @id @default(cuid())
+  content   String   @db.Text
+  role      String // 'user' or 'assistant'
+  createdAt DateTime @default(now())
+
+  // Chat relationship
+  chatId String
+  chat   DesignChat @relation(fields: [chatId], references: [id], onDelete: Cascade)
+
+  // Tool calls and results (JSON)
+  toolCalls Json?
+
+  @@index([chatId])
+  @@index([createdAt])
+  @@map(name: "design_messages")
+}
+
+model DesignChatVote {
+  id        String   @id @default(cuid())
+  isUpvote  Boolean // true for upvote, false for downvote
+  createdAt DateTime @default(now())
+
+  // User who voted
+  userId String
+  user   User   @relation("UserDesignChatVotes", fields: [userId], references: [id], onDelete: Cascade)
+
+  // Chat being voted on
+  chatId String
+  chat   DesignChat @relation(fields: [chatId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, chatId]) // One vote per user per chat
+  @@index([chatId])
+  @@index([userId])
+  @@map(name: "design_chat_votes")
+}
+
+// Add these relations to your existing User model:
+// designChats     DesignChat[]     @relation("UserDesignChats")
+// designChatVotes DesignChatVote[] @relation("UserDesignChatVotes")

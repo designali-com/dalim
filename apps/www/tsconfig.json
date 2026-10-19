@@ -1,0 +1,19 @@
+{
+  "extends": "@dalim/ts-config/base.json",
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["./*"], 
+      "contentlayer/generated": ["./.contentlayer/generated"],
+      "@dalim/core/*": ["../../packages/core/src/*"]
+    }
+  },
+  "include": [
+    "./next-env.d.ts",
+    "./**/*.ts",
+    "./**/*.tsx",
+    ".contentlayer/generated",
+    ".next/types/**/*.ts", 
+    "next.config.mjs"  ],
+  "exclude": ["node_modules", "dist"]
+}

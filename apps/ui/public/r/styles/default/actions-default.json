@@ -1,0 +1,16 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "actions-default",
+  "type": "registry:example",
+  "registryDependencies": [
+    "actions",
+    "ai"
+  ],
+  "files": [
+    {
+      "path": "registry/default/examples/ai/actions-default.tsx",
+      "content": "\"use client\"\n\nimport { useState } from \"react\"\nimport {\n  BookmarkIcon,\n  CopyIcon,\n  RefreshCcwIcon,\n  Share2Icon,\n  ThumbsDownIcon,\n  ThumbsUpIcon,\n} from \"lucide-react\"\n\nimport { Action, Actions } from \"@/registry/default/ui/ai/actions\"\n\nexport default function ActionsDemo() {\n  const [liked, setLiked] = useState<null | \"up\" | \"down\">(null)\n  const [saved, setSaved] = useState(false)\n\n  return (\n    <div className=\"flex h-full items-center justify-center\">\n      <div className=\"mx-auto max-w-md\">\n        <Actions className=\"flex flex-wrap gap-2\">\n          {/* Like / Dislike Toggle */}\n          <Action\n            label={liked === \"up\" ? \"Unlike\" : \"Like\"}\n            onClick={() => setLiked(liked === \"up\" ? null : \"up\")}\n            className={liked === \"up\" ? \"bg-green-100 text-green-600\" : \"\"}\n          >\n            <ThumbsUpIcon className=\"size-4\" />\n          </Action>\n\n          <Action\n            label={liked === \"down\" ? \"Undo dislike\" : \"Dislike\"}\n            onClick={() => setLiked(liked === \"down\" ? null : \"down\")}\n            className={liked === \"down\" ? \"bg-red-100 text-red-600\" : \"\"}\n          >\n            <ThumbsDownIcon className=\"size-4\" />\n          </Action>\n\n          {/* Retry */}\n          <Action label=\"Retry\" onClick={() => alert(\"Retrying...\")}>\n            <RefreshCcwIcon className=\"size-4\" />\n          </Action>\n\n          {/* Copy */}\n          <Action\n            label=\"Copy\"\n            onClick={() => navigator.clipboard.writeText(\"Copied content\")}\n          >\n            <CopyIcon className=\"size-4\" />\n          </Action>\n\n          {/* Share */}\n          <Action\n            label=\"Share\"\n            onClick={() =>\n              navigator.share\n                ? navigator.share({ text: \"Shared content\" })\n                : alert(\"Sharing not supported\")\n            }\n          >\n            <Share2Icon className=\"size-4\" />\n          </Action>\n\n          {/* Save Toggle */}\n          <Action\n            label={saved ? \"Unsave\" : \"Save\"}\n            onClick={() => setSaved((prev) => !prev)}\n            className={saved ? \"bg-blue-100 text-blue-600\" : \"\"}\n          >\n            <BookmarkIcon className=\"size-4\" />\n          </Action>\n        </Actions>\n      </div>\n    </div>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ]
+}

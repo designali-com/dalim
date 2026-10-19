@@ -1,0 +1,27 @@
+{
+  "title": "Backgrounds",
+  "pages": [
+    "shader-ripple",
+    "shader-lines",
+    "shader-rgb",
+    "shader-morphing",
+    "shader-wave",
+    "render-canvas",
+    "particle-highlight",
+    "particle-circle",
+    "pixel-animated",
+    "void-animation",
+    "fluid-dynamics",
+    "interactive-dots",
+    "webgl-blob",
+    "gradient-bars",
+    "animated-gradient",
+    "scroll-progress",
+    "shine-border",
+    "rain",
+    "snow-flakes",
+    "animated-leaves",
+    "dot-pattern",
+    "grid-pattern"
+  ]
+}

@@ -1,0 +1,108 @@
+import { Geist } from 'next/font/google'
+
+import { Toaster as Sonner } from '@dalim/core/ui/sonner'
+import { Toaster } from '@dalim/core/ui/toaster'
+import { Suspense } from 'react'
+import { CookieConsent } from '@dalim/core/components/common/CookieConsent'
+import { AdSense } from '@dalim/core/components/common/adsence'
+import { ScrollProgress } from '@dalim/core/components/backgrunds/scroll-progress'
+
+import './globals.css'
+import { Header } from '@dalim/core/components/layout/header'
+import { Footer } from '@dalim/core/components/layout/footer'
+import { Analytics } from '@dalim/core/components/common/analytics'
+import { Metadata, Viewport } from 'next/types'
+import Providers from '../components/providers'
+import { ArrowRightIcon, Loader } from 'lucide-react'
+import NowPlaying from '../components/common/now-playing'
+
+const fontSans = Geist({
+    subsets: ['latin'],
+    variable: '--font-sans',
+})
+
+export const metadata: Metadata = {
+    metadataBase: new URL('https://ui.dalim.in'),
+    title: 'Dalim',
+    description: 'Designs That Give',
+}
+
+const META_THEME_COLORS = {
+    light: '#ffffff',
+    dark: '#000000',
+}
+
+export const viewport: Viewport = {
+    themeColor: META_THEME_COLORS.light,
+}
+
+export default function RootLayout({
+    children,
+}: Readonly<{
+    children: React.ReactNode
+}>) {
+    return (
+        <html
+            lang="en"
+            suppressHydrationWarning>
+            <head>
+                <script
+                    dangerouslySetInnerHTML={{
+                        __html: `
+              try {
+                if (localStorage.theme === 'dark' || ((!('theme' in localStorage) || localStorage.theme === 'system') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                  document.querySelector('meta[name="theme-color"]').setAttribute('content', '${META_THEME_COLORS.dark}')
+                }
+              } catch (_) {}
+            `,
+                    }}
+                />
+                <AdSense pId="ca-pub-3647003303744848" />
+            </head>
+            <body className={`${fontSans.variable} has-not-data-home:before:absolute has-not-data-home:before:inset-x-0 has-not-data-home:before:h-100 has-not-data-home:before:bg-linear-to-b has-not-data-home:before:from-zinc-100 has-data-home:bg-zinc-50 dark:has-not-data-home:before:hidden dark:has-data-home:bg-zinc-950 font-sans tracking-[-0.25px] antialiased`}>
+                <Providers>
+                    <div className="overflow-hidden px-4 supports-[overflow:clip]:overflow-clip sm:px-6">
+                        <div className="relative mx-auto w-full max-w-7xl before:absolute before:inset-y-0 before:-left-6 before:w-px before:bg-[linear-gradient(to_bottom,--theme(--color-border/.3),--theme(--color-border)_200px,--theme(--color-border)_calc(100%-200px),--theme(--color-border/.3))] after:absolute after:inset-y-0 after:-right-6 after:w-px after:bg-[linear-gradient(to_bottom,--theme(--color-border),--theme(--color-border)_200px,--theme(--color-border)_calc(100%-200px),--theme(--color-border))]">
+                            <div className="relative flex min-h-screen flex-col">
+                                <ScrollProgress />
+                                <div className="bg-muted text-foreground dark px-4 py-3">
+                                    <p className="flex justify-center text-sm">
+                                        <a
+                                            href="https://aliimam.in/"
+                                            className="group">
+                                            <span className="me-1 text-base leading-none">✨</span>
+                                            Introducing new site of aliimam
+                                            <ArrowRightIcon
+                                                className="-mt-0.5 ms-2 inline-flex opacity-60 transition-transform group-hover:translate-x-0.5"
+                                                size={16}
+                                                aria-hidden="true"
+                                            />
+                                        </a>
+                                    </p>
+                                </div>
+                                <Header />
+                                <Suspense
+                                    fallback={
+                                        <div className="mt-[400px] flex h-screen justify-center">
+                                            <Loader
+                                                strokeWidth={0.5}
+                                                className="h-10 w-10 animate-spin"
+                                            />
+                                        </div>
+                                    }>
+                                    <main className="grow">{children}</main>
+                                </Suspense>
+                                <CookieConsent />
+                                <Footer />
+                                <NowPlaying />
+                            </div>
+                        </div>
+                    </div>
+                    <Toaster />
+                    <Sonner />
+                    <Analytics />
+                </Providers>
+            </body>
+        </html>
+    )
+}

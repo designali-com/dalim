@@ -1,0 +1,34 @@
+{
+  "name": "dalim",
+  "version": "0.1.1",
+  "private": true,
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo build",
+    "start": "next start",
+    "lint": "next lint",
+    "registry:build": "shadcn build"
+  },
+  "author": {
+    "name": "Dalim",
+    "email": "contact@dalim.in",
+    "url": "https://x.com/dalim_in"
+  },
+  "packageManager": "pnpm@9.10.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ], 
+  "devDependencies": {
+    "prettier": "3.5.3",
+    "prettier-plugin-tailwindcss": "0.6.11",
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "puppeteer": "^24.17.0",
+    "tsx": "^4.19.3",
+    "turbo": "^2.5.3"
+  }
+}
